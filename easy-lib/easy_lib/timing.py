@@ -1,4 +1,5 @@
 import inspect
+import statistics
 import time
 from collections import defaultdict
 from contextlib import contextmanager
@@ -7,7 +8,6 @@ from functools import wraps
 from typing import Callable
 from unittest import TestCase
 
-import numpy as np
 from loguru import logger
 
 HEADERS = ['label', 'total (s)', 'count', 'min', 'max', 'mean', 'std']
@@ -38,11 +38,11 @@ class TimeEntry:
 
     @property
     def mean(self):
-        return self._undefined(np.mean(self.events))
+        return self._undefined(statistics.mean(self.events))
 
     @property
     def std(self):
-        return self._undefined(np.std(self.events))
+        return self._undefined(statistics.pstdev(self.events))
 
     def _undefined(self, value: float):
         if len(self.events) <= 1:
@@ -64,13 +64,13 @@ class Timings:
         yield
         self._after(name, start)
 
-    def time_func(self, func: Callable):
+    def time_func[** P, R](self, func: Callable[P, R]) -> Callable[P, R]:
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def inner(*args: P.args, **kwargs: P.kwargs) -> R:
             with self.timing(func.__qualname__):
                 return func(*args, **kwargs)
 
-        return wrapper
+        return inner
 
     def show_timing(self):
 

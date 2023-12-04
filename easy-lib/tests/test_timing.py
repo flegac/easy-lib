@@ -3,11 +3,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from pprint import pprint
 
-from easy_lib.config import Config
+from easy_config.config import Config
 from easy_lib.timing import TimingTestCase, timing
 
 
-class TestIt(TimingTestCase):
+class TestTiming(TimingTestCase):
 
     @classmethod
     def setUpClass(cls):
