@@ -1,0 +1,7 @@
+loguru
+
+graphviz
+networkx
+holoviews
+pydot
+scikit-image

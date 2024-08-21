@@ -1,0 +1,5 @@
+loguru
+tabulate
+pyyaml
+pydantic
+msgpack
