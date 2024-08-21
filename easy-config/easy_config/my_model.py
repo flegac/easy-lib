@@ -14,6 +14,7 @@ type PathLike = Path | str
 class MyModel(BaseModel):
     class Config:
         extra = 'forbid'
+        arbitrary_types_allowed = True
 
     @classmethod
     def from_dict(cls, raw: dict, validate=True):

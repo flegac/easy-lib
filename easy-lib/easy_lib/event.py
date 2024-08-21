@@ -2,7 +2,7 @@ from typing import Callable
 
 
 class Event:
-    def __init__(self, name: str):
+    def __init__(self, name: str='EventDefault'):
         self.name = name
         self.observer: list[Callable[[...], ...]] = []
 
