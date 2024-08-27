@@ -1,10 +1,13 @@
+from dataclasses import dataclass
 from pathlib import Path
+from pprint import pprint
 from typing import Any
 
 from pydantic import Field
 
+from easy_config.config import Config
 from easy_config.my_model import MyModel
-from easy_lib.timing import TimingTestCase, timing
+from easy_kit.timing import TimingTestCase, timing
 
 
 class Item(MyModel):
@@ -32,6 +35,16 @@ state = State(id='toto', regions=[
 
 class TestModel(TimingTestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.temp_path = Path.cwd() / 'toto.csv'
+
+    @classmethod
+    def tearDownClass(cls):
+        super().tearDownClass()
+        cls.temp_path.unlink(missing_ok=True)
+
     def test_json(self):
         root = Path.cwd()
         path = root / 'toto.json'
@@ -53,3 +66,21 @@ class TestModel(TimingTestCase):
                 xxx = State.load(path)
             with timing('bson.load[no_validation]'):
                 xxx = State.load(path, validate=False)
+
+    def test_config_csv(self):
+        @dataclass
+        class Toto:
+            x: float
+            y: str
+
+        xx = [
+            Toto(2., 'aaa'),
+            Toto(2., 'aaa'),
+            Toto(2., 'aaa'),
+        ]
+        path = self.temp_path
+
+        Config.write_csv(path, xx)
+        yy = Config.read_csv(path, Toto)
+
+        pprint(yy)

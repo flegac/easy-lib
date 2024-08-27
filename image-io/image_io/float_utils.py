@@ -1,4 +1,4 @@
-from easy_lib.timing import time_func
+from easy_kit.timing import time_func
 
 
 @time_func

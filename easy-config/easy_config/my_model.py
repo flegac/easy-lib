@@ -1,7 +1,8 @@
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, ClassVar
 
+from easy_kit.timing import timing
 from pydantic import BaseModel
 
 UNPACK_CONFIG = {
@@ -12,22 +13,29 @@ type PathLike = Path | str
 
 
 class MyModel(BaseModel):
+    validation: ClassVar[bool] = True
+
     class Config:
         extra = 'forbid'
         arbitrary_types_allowed = True
 
     @classmethod
-    def from_dict(cls, raw: dict, validate=True):
+    def from_dict(cls, raw: dict, validate: bool = None):
+        if validate is None:
+            validate = MyModel.validation
+
         if validate:
-            return cls(**raw)
+            with timing('MyModel.from_dict[validate=True]'):
+                return cls(**raw)
         else:
-            return cls.model_construct(**raw)
+            with timing('MyModel.from_dict[validate=False]'):
+                return cls.model_construct(**raw)
 
     def to_dict(self):
         return self.model_dump(mode='json')
 
     @classmethod
-    def load(cls, path: PathLike, validate=True):
+    def load(cls, path: PathLike, validate: bool = None):
         path = Path(path)
         if path.suffix.endswith('bson'):
             return cls.load_binary(path, validate)
@@ -46,7 +54,7 @@ class MyModel(BaseModel):
             json.dump(self.to_dict(), _)
 
     @classmethod
-    def load_json(cls, path: PathLike, validate=True):
+    def load_json(cls, path: PathLike, validate: bool = None):
         with Path(path).open() as _:
             raw = json.load(_)
             return cls.from_dict(raw, validate)
@@ -59,7 +67,7 @@ class MyModel(BaseModel):
             _.write(data)
 
     @classmethod
-    def load_binary(cls, path: PathLike, validate=True):
+    def load_binary(cls, path: PathLike, validate: bool = None):
         import msgpack
 
         with  Path(path).open('rb') as _:

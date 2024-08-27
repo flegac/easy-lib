@@ -5,7 +5,7 @@ import numpy as np
 from loguru import logger
 from tifffile import imwrite, imread, TiffFileError
 
-from easy_lib.timing import time_func
+from easy_kit.timing import time_func
 
 
 class ImageIO:
