@@ -2,3 +2,5 @@ loguru
 pyyaml
 pydantic
 msgpack
+toml
+setuptools

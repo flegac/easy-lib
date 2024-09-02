@@ -1,4 +1,0 @@
-easy-kit
-opencv-python
-dataclass-csv
-tifffile
