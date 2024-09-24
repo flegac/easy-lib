@@ -1,9 +1,8 @@
 import json
-from pathlib import Path
-from typing import Any, ClassVar
-
 from easy_kit.timing import timing
+from pathlib import Path
 from pydantic import BaseModel
+from typing import Any, ClassVar
 
 UNPACK_CONFIG = {
     'use_list': False
